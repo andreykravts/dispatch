@@ -26,10 +26,14 @@ public class DispatchConfiguration {
         return factory;
     }
 
+    @Value("${kafka.bootstrap-servers}")
+    private String bootstrapServers;
+
+
     @Bean
-    public ConsumerFactory<String,Object> consumerFactory(@Value("${kafka.bootstrap-servers}") String bootstrapServers){
+    public ConsumerFactory<String,Object> consumerFactory(){
         Map<String,Object> config = new HashMap<>();
-        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, this.bootstrapServers);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
         config.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class);
         config.put(JsonDeserializer.VALUE_DEFAULT_TYPE, OrderCreated.class.getCanonicalName());
